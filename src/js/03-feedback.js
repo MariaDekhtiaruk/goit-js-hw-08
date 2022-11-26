@@ -1,8 +1,11 @@
+import throttle from 'lodash.throttle';
+
 const form = document.querySelector(`.feedback-form`);
+form.addEventListener('input', throttle(onFormInput, 500));
 form.addEventListener(`submit`, onFormSubmit);
 
 function onFormSubmit(evt) {
-  event.preventDefault();
+  evt.preventDefault();
 
   const formElements = evt.currentTarget.elements;
   const mail = formElements.email.value;
@@ -17,7 +20,7 @@ function onFormSubmit(evt) {
   localStorage.clear();
 }
 
-const onFormInput = evt => {
+function onFormInput(evt) {
   let formState = localStorage.getItem('feedback-form-state');
   if (!formState) {
     formState = {
@@ -29,7 +32,6 @@ const onFormInput = evt => {
   }
   formState[evt.target.name] = evt.target.value;
   localStorage.setItem('feedback-form-state', JSON.stringify(formState));
-};
+}
 
-form.addEventListener('input', onFormInput);
 //const currentTime = localStorage.getItem('videoplayer-current-time');
